@@ -1,2 +1,0 @@
-Relevant to translation applications. Points to a file containing
-rules for post-transfer orthography processing.

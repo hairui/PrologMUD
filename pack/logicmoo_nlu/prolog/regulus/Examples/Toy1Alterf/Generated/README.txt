@@ -1,1 +1,0 @@
-This directory is for holding working files, including the recogniser package.

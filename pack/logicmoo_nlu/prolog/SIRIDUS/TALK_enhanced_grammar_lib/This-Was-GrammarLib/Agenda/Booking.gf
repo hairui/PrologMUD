@@ -1,1 +1,0 @@
-abstract Booking = BookingTimes, BookingEvents, BookingDates ** {}

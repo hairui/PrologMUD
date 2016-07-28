@@ -1,3 +1,0 @@
-Relevant to applications using surface processing. Points to a file
-defining a target model. The file should define the predicates
-target\_\-atom/1 and target\_\-atom\_\-excludes/2.

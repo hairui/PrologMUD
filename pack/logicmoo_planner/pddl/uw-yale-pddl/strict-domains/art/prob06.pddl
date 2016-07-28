@@ -1,5 +1,0 @@
-(define (problem art3b)
-    (:domain art)
-  (:init (p3))
-  (:goal (AND (g)))
-  (:length (:serial 3) (:parallel 3)))

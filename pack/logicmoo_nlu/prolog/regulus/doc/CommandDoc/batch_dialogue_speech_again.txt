@@ -1,2 +1,0 @@
-Version of BATCH\_\-DIALOGUE\_\-SPEECH that skips the speech recognition
-stage, and instead uses stored results from the previous run.

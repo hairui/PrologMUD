@@ -1,6 +1,0 @@
-(load-file "domain.tlp")
-(load-file "genprobs.tlp")
-(open-file "problems.tlp" write)
-(genprobs 2 13 5 4)
-(exit)
-

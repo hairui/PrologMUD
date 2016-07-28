@@ -1,3 +1,0 @@
-Relevant to translation applications. Points to a file, or list of
-files, containing rules that transfer interlingual representations
-into target language representations.

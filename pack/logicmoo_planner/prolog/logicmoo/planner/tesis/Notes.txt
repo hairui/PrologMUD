@@ -1,3 +1,0 @@
-Path de la librería CIAO 
-
-/usr/lib/ciao/ciao-1.14/library/

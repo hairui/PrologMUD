@@ -1,1 +1,0 @@
-nlm.exe ntk8-800-a-x46-9d6108a3c3a1 &

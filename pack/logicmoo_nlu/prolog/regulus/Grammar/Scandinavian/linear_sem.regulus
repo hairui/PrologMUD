@@ -1,5 +1,0 @@
-
-include('$REGULUS/Grammar/linear_sem_main.regulus').
-
-include('$REGULUS/Grammar/standard_numbers_sem.regulus').
-

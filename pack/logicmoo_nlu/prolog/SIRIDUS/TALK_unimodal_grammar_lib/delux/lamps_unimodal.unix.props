@@ -1,4 +1,0 @@
-TRINDIKIT=../trindikit4
-GODIS=../godis
-SEP=:
-FAC=../scripts/run-unix.sh fac

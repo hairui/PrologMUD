@@ -1,4 +1,0 @@
-
-:- [config].
-
-:- ['$REGULUS/Prolog/load'].

@@ -1,4 +1,0 @@
-Relevant to applications that use generation (typically translation
-applications). Defines the top-level category of the generation
-grammar. Default is .MAIN.
-

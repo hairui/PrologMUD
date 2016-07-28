@@ -1,2 +1,0 @@
-macro(a(Arabic, Roman), Roman).
-macro(a(Arabic, Roman, Gloss), Gloss).

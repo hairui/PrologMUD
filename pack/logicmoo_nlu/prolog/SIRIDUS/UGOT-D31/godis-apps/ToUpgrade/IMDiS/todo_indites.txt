@@ -1,5 +1,0 @@
-* instead of saying "reinstall ...", refill the plan and start over
-
-* clear shared^com when restarting
-
-* reqRep, repeat etc.

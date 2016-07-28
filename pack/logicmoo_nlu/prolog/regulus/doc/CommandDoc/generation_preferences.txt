@@ -1,3 +1,0 @@
-Relevant to applications that use generation (typically translation
-applications). Points to the file containing the generation preference
-declarations.

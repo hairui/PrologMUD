@@ -1,1 +1,0 @@
-cmd /k recserver -package %REGULUS%\Examples\Toy1\Generated\recogniser_corrections

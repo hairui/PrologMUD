@@ -1,5 +1,0 @@
-
-macro(st(Speech, Text), Text).
-
-include('$REGULUS/Examples/Calendar/Regulus/paraphrase_main.regulus').
-

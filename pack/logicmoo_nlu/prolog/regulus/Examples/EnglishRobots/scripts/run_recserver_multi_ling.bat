@@ -1,1 +1,0 @@
-cmd /k recserver -package %REGULUS%\Examples\EnglishRobots\Generated\robots_specialised_recogniser  -package %REGULUS%\Examples\GermanRobots\Generated\robots_specialised_recogniser

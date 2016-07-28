@@ -1,2 +1,0 @@
-This assumes that surface pattern files have been loaded, using the
-LOAD\_\-SURFACE\_\-PATTERNS command.

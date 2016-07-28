@@ -1,3 +1,0 @@
-Defines a post-processing predicate that is applied after Regulus
-analysis. If you are using the riacs\_\-sem semantic macros, you must set
-this parameter to the value riacs\_\-postproc\_\-lf.

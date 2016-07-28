@@ -1,1 +1,0 @@
-compilation-server -package %REGULUS%/Examples/Toy1Dynamic/Generated/recogniser_dynamic rm.Addresses=localhost:1234 comp.Port=1235

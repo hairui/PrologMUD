@@ -1,3 +1,0 @@
-
-zeon_p18a_dp.pddl: syntax error in line 403, '(':
-domain definition expected

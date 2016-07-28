@@ -1,2 +1,0 @@
-Relevant to dialogue applications. Value should be a list of modules
-referenced by the compiled LF patterns.

@@ -1,1 +1,0 @@
-Relevant to dialogue applications. Points to a files of LF patterns.

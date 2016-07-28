@@ -1,3 +1,0 @@
-
-macro(st(Speech, Text), Text).
-

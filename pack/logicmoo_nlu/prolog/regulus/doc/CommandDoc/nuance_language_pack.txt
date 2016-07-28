@@ -1,2 +1,0 @@
-Specifies the Nuance language pack to be used by Nuance compilation in
-the NUANCE\_\-COMPILE command.

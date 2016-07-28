@@ -1,2 +1,0 @@
-Switch off help processing for top-level inputs. This only makes
-sense if help resources are loaded.

@@ -1,3 +1,0 @@
-Relevant to applications using targeted help. Loads the help resources
-previously build by invoking the {\tt COMPILE\_\-HELP} command.
-

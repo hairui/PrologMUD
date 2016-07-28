@@ -1,3 +1,0 @@
-macro(k(Hangul, Romaji, Gloss), Hangul).
-
-macro(k(Hangul, Romaji), Hangul).

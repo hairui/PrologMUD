@@ -1,1 +1,0 @@
-cmd /k xapp -package %REGULUS%\Examples\Toy0\Generated\recogniser

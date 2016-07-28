@@ -1,2 +1,0 @@
-
-abstract Music = MusicSongs, MusicArtists ** {}
