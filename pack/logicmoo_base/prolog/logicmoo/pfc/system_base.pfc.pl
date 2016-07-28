@@ -41,14 +41,80 @@
 
 :- '$set_source_module'(baseKB).
 
-:- asserta(baseKB:mtCycL(baseKB)).
+:- asserta_if_new(baseKB:mtCycL(baseKB)).
+
+col_as_unary(col_as_isa).
+col_as_unary(col_as_unary).
+col_as_unary(col_as_static).
+col_as_unary(argsQuoted).
+col_as_unary(tPred).
+
+%col_as_isa(mtProlog).
+%col_as_isa(mtCycL).
+col_as_unary(mtProlog).
+col_as_unary(mtExact).
+col_as_unary(mtCycL).
+col_as_unary(pfcLHS).
+col_as_unary(tPred).
+col_as_unary(tCol).
+:- mpred_trace_exec.
+% :- rtrace((ain_expanded(tCol(tCol)))).
+:- mpred_notrace_exec.
+
+% :- break.
+
+%:- start_rtrace,trace.
+:- ain_expanded(baseKB:mtCycL(baseKB)).
+col_as_isa(tSet).
+col_as_isa(ttSpatialType).
+col_as_isa(ttPredType).
+%col_as_isa(completelyAssertedCollection).
+
+col_as_unary(completeExtentAsserted).
+col_as_unary(completelyAssertedCollection).
+
+t(C,I)==>isa(I,C).
+
+%% t(?Collection, ?VALUE1) is semidet.
+%
+% Completely Asserted Collection.
+%
+t(completelyAssertedCollection,prologNegByFailure).
+t(completelyAssertedCollection,pm).
+t(completelyAssertedCollection,prologMacroHead).
+t(completelyAssertedCollection,tMicrotheory).
+t(T,I):- cwc, I==T,completelyAssertedCollection==I,!.
+t(completelyAssertedCollection,mtCycL).
+t(T,I):- cwc, I==T,ttExpressionType==I,!,fail.
+
+
+%% prologNegByFailure( ?VALUE1) is semidet.
+%
+% Prolog Negated By Failure.
+%
+prologNegByFailure(prologNegByFailure).
+   	 
+
+
+
+% :- assert_if_new((isa(I,T):- cwc, visit_isa(I,T))).
+
+% :- break.
+
+ttPredType(X)==>completelyAssertedCollection(X).
+
+:- do_gc.
+
 :- set_fileAssertMt(baseKB).
 
 :- dynamic(baseKB:agent_call_command/2).
-:- baseKB:import(baseKB:agent_call_command/2).
+:- system:import(baseKB:agent_call_command/2).
 
 arity(comment,2).
 
+:- kb_dynamic(baseKB:mtCycL/1).
+:- kb_dynamic(baseKB:mtExact/1).
+:- kb_dynamic(baseKB:predicateConventionMt/2).
 :- dynamic(baseKB:mtCycL/1).
 :- dynamic(baseKB:mtExact/1).
 :- dynamic(baseKB:predicateConventionMt/2).
@@ -69,14 +135,15 @@ baseKB:mtCycL(baseKB).
 
 %:- rtrace.
 :- dynamic(mpred_mark/3).
+:- kb_dynamic(mpred_mark/3).
 %:- nortrace.
 
 
 tAtemporalNecessarilyEssentialCollectionType(ttModule).
 
 /*
-:- kb_dynamic(collectionConventionMt/2).
 :- dynamic(collectionConventionMt/2).
+:- kb_dynamic(collectionConventionMt/2).
 tAtemporalNecessarilyEssentialCollectionType(ANECT)==> collectionConventionMt(ANECT,baseKB).
 */
 
@@ -93,12 +160,18 @@ tAtemporalNecessarilyEssentialCollectionType(ANECT)==>
 :- dynamic(sometimesSlow/0).
 :- dynamic(sometimesBuggy/0).
 :- dynamic(sometimesUseless/0).
+:- kb_dynamic(ttModule/1).
+:- kb_dynamic(marker_supported/2).
+:- kb_dynamic(pass2/0).
+:- kb_dynamic(sometimesSlow/0).
+:- kb_dynamic(sometimesBuggy/0).
+:- kb_dynamic(sometimesUseless/0).
 
 
 % NEVER (P/mpred_non_neg_literal(P) ==> { remove_negative_version(P) } ).
 
 :- dynamic(mpred_mark_C/1).
-
+:- kb_dynamic(mpred_mark_C/1).
 :- kb_dynamic(tCol/1).
 
 :- kb_dynamic(subFormat/2).
@@ -113,6 +186,9 @@ tAtemporalNecessarilyEssentialCollectionType(ANECT)==>
 :- dynamic(arity/2).
 :- dynamic(disjointWith/2).
 :- dynamic(genlsFwd/2).
+:- kb_dynamic(arity/2).
+:- kb_dynamic(disjointWith/2).
+:- kb_dynamic(genlsFwd/2).
 
 % prologHybrid(arity/2).
 
@@ -127,7 +203,8 @@ alwaysGaf(pfcRHS).
 alwaysGaf(pfcLHS).
 
 
-tCol(A)/atom(A)==>{call(kb_dynamic(A/1))}.
+tCol(A)/atom(A)==>{decl_type_unsafe(A), kb_dynamic(A/1)}.
+% tCol(C)/(\+ never_isa_syntax(C))==>{decl_as_isa(C)}.
 
 tCol(tCol).
 tCol(tPred).
@@ -360,7 +437,7 @@ tCol(tCol).  % = isa(tCol,tCol).
 mtProlog(Mt),predicateConventionMt(F,Mt)/(Mt\==baseKB)==>prologBuiltin(F).
 
 % genlsFwd(Sub,Super)==> (isa(I,Super) :- isa(I,Sub)). 
-:- ain_expanded((genlsFwd(Sub,Super)==> (t(Sub,I) ==> t(Super,I)))).
+% :- ain_expanded((genlsFwd(Sub,Super)==> (t(Sub,I) ==> t(Super,I)))).
 
 ttModule(M)==>tCol(M).
 
@@ -374,22 +451,17 @@ tCol(Decl)==>functorDeclares(Decl).
 :- sanity(( fully_expand_now(cuz,((ttModule(mtCycL,
   comment("yada....................."),
   genlsFwd(tMicrotheory)))),
-  OO),dmsg(full_transform=OO),
-      OO=(_,_))).
+  OO),dmsg(full_transform=OO),OO=(_,_))).
 
 % :- rtrace((trace,fully_expand_now(zzz,ttModule(mtCycL777One,comment("hi there"),genlsFwd(tMicrotheory)),O))),nl,writeq(O),nl,notrace.
 % :- break.
 
 :- ain_expanded(ttModule(mtCycL,
   comment("mtCycL(?Mt) Mts like baseKB that contain mainly assertions written in CycL"),
-  genlsFwd(tMicrotheory))).
+   genlsFwd(tMicrotheory))).
 
-:- sanity(arity(ttModule,1)).
-
-:- sanity(\+ arity(ttModule,3)).
-:- sanity(\+ predicate_property(ttModule(_,_,_),_)).
-
-:- ain_expanded(ttModule(mtProlog,comment("Real Prolog modules loaded with :-use_module/1 such as 'lists' or 'apply'"),
+:- ain_expanded(
+ ttModule(mtProlog,comment("Real Prolog modules loaded with :-use_module/1 such as 'lists' or 'apply'"),
   genls(tMicrotheory))).
 
 :- sanity(arity(ttModule,1)).
@@ -397,7 +469,7 @@ tCol(Decl)==>functorDeclares(Decl).
 :- sanity(\+ predicate_property(ttModule(_,_,_),_)).
 
 :- ain_expanded(ttModule(mtProlog,comment("Builtin Prolog code modules such as 'lists' or 'apply' and PFC system like 'mpred_loader' or 'mpred_type_wff'"),
-  genlsFwd(mtProlog),genls(mtCore))).
+  genls(mtCore))).
 
 
 % ttModule(mtLocal,comment("mtLocal(?Mt) is always scoped underneath baseKB")).
@@ -423,6 +495,11 @@ genls(mtCore,tMicrotheory).
 
 mtCycL(O)==>({call(ensure_abox(O))},~mtProlog(O),\+ mtProlog(O)).
 
+:- sanity(arity(ttModule,1)).
+
+:- sanity(\+ arity(ttModule,3)).
+:- sanity(\+ predicate_property(ttModule(_,_,_),_)).
+
 
 :- dynamic(nondet/0).
 :- kb_dynamic(nondet/0).
@@ -436,7 +513,7 @@ mtCycL(O)==>({call(ensure_abox(O))},~mtProlog(O),\+ mtProlog(O)).
 
 */
 {module_property(Mt,class(user)),
-   (atom_concat('common_logic_',_,Mt);atom_concat('logicmoo_util_',_,Mt);atom_concat('mpred_',_,Mt))} 
+   (atom_concat('common_logic_',_,Mt);atom_concat('logicmoo_',_,Mt);atom_concat('mpred_',_,Mt))} 
     ==>  mtProlog(Mt).
 {module_property(Mt,class(library))} ==> mtProlog(Mt).
 {module_property(Mt,class(system))} ==> mtProlog(Mt).
@@ -518,4 +595,5 @@ doRedelMe.
 
 nondet.
 
-:- set_prolog_flag(dialect_pfc,false).
+% :- set_prolog_flag(dialect_pfc,false).
+
