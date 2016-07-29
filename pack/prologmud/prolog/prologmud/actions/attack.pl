@@ -42,7 +42,7 @@ agent_call_command(Agent,actAttack(Dir)) :-
 	from_dir_target(Agent,Dir,XXYY),
 	mudAtLoc(What,XXYY),
 	props(What,mudWeight(_)),
-	call_update_stats(Agent,bash),
+	call_update_stats(Agent,actBash),
 	call_update_charge(Agent,actAttack).
 
 % Hit nothing (empty space)... causes a little damage
@@ -83,16 +83,23 @@ damage_foe(Agent,What,hit) :-
 	NewDam is (OldDam - (Atk - Def)),
 	ain(mudHealth(What,NewDam)).
 
+:- if(baseKB:startup_option(datalog,sanity);baseKB:startup_option(clif,sanity)).
+:- must(prologBuiltin(damage_foe)).
+:- must(prologBuiltin(check_for_weapon)).
+
+prologBuiltin(upprop,1).
+prologBuiltin(upprop,2).
+
+:- endif.
+
 % Record keeping
 update_charge(Agent,actAttack) :- upprop(Agent,mudEnergy(+ -5)).
-update_stats(Agent,bash) :-  upprop(Agent,mudHealth(+ -2)),
-	(add_cmdfailure(Agent,bash)).
+update_stats(Agent,actBash) :-  upprop(Agent,mudHealth(+ -2)),
+	(add_cmdfailure(Agent,actBash)).
 update_stats(Agent,wiff) :- 
 	del(mudHealth(Agent,Old)),
 	New is Old - 1,
 	ain(mudHealth(Agent,New)),
-	(add_cmdfailure(Agent,bash)).
-
-
+	(add_cmdfailure(Agent,actBash)).
 
 :- include(prologmud(mud_footer)).

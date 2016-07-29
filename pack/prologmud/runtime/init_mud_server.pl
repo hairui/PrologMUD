@@ -68,7 +68,7 @@
 
 
 :- system:ensure_loaded(library(prolog_server)).
-:- prolog_server(4022, [allow(_)]).
+:- prolog_server(4023, [allow(_)]).
 :- system:ensure_loaded(library(logicmoo_utils)).
 
 :- set_prolog_flag(access_level,system).
@@ -110,10 +110,10 @@ unsafe_preds_init(M,F,A):-M=system,member(F,[shell,halt]),current_predicate(M:F/
 :- set_prolog_flag(logicmoo_debug,true).
 %:- set_prolog_flag(unsafe_speedups,false).
 
-:-baseKB:assert_isa(iRR7,tRR).
-:-baseKB:ain(genls(tRR,tRRP)).
-:-must( baseKB:isa(iRR7,tRRP) ).
-:-must( baseKB:tRRP(iRR7) ).
+:- baseKB:assert_isa(iRR7,tRR).
+:- baseKB:ain(genls(tRR,tRRP)).
+:- must( baseKB:isa(iRR7,tRRP) ).
+:- must( baseKB:tRRP(iRR7) ).
 
 
 :-kb_dynamic(baseKB:sanity_test/0).
@@ -130,7 +130,7 @@ unsafe_preds_init(M,F,A):-M=system,member(F,[shell,halt]),current_predicate(M:F/
 
 :- statistics.
 
-:- must((statistics(cputime,X),X<45)).
+:- must((statistics(cputime,X),X<52)).
 
 %:- ensure_webserver(3020).
 :- initialization(ensure_webserver(3020)).
@@ -192,7 +192,8 @@ unsafe_preds_init(M,F,A):-M=system,member(F,[shell,halt]),current_predicate(M:F/
 
 %:- push_modules.
 % [Required] load the mud system
-:- with_mpred_trace_exec(show_entry(gripe_time(40,ensure_loaded(prologmud(mud_loader))))).
+% :- with_mpred_trace_exec(show_entry(gripe_time(40,ensure_loaded(prologmud(mud_loader))))).
+:- must(show_entry(gripe_time(40,ensure_loaded(prologmud(mud_loader))))).
 %:- lcme:reset_modules.
 
 %:- set_prolog_flag(logicmoo_debug,true).
@@ -279,11 +280,7 @@ mpred_argtypes(bordersOn(tRegion,tRegion)).
 
 :- set_prolog_flag(dialect_pfc,false).
 
-:- mpred_notrace_exec.
-
 :- file_begin(pl).
-
-:- ensure_loaded(logicmoo(plarkc/logicmoo_i_cyc_kb)).
 
 
 % [Optionaly] Start the telent server % iCommanderdata66
@@ -315,8 +312,9 @@ lst :- force_reload_mpred_file('../games/src_game_startrek/*.pfc.pl').
 
 :- must_det(argIsa(genlPreds,2,_)).
 
-%:- ensure_loaded(logicmoo(plarkc/logicmoo_i_cyc_kb)).
-%:- initialization(ltkb1,now).
+load_ckb:- ensure_loaded(logicmoo(plarkc/logicmoo_i_cyc_kb)),ltkb1.
+
+%:- initialization(ltkb1,load_ckb).
 
 % :- break.
 
@@ -324,14 +322,19 @@ lst :- force_reload_mpred_file('../games/src_game_startrek/*.pfc.pl').
 :- assert_setting01(lmconf:eachFact_Preconditional(true)).
 :- ain(isRuntime).
 
-:- ain(isa(iFoodRez2,tFood)).
-:- must(isa(iFoodRez2,tEatAble)).
-:- must(parseIsa_Call(tEatAble,O,[food],Rest)).
+:- mpred_notrace_exec.
+
+/*
+:- ain(isa(iFooRez2,tFood)).
+:- must(isa(iFooRez2,tEatAble)).
+:- must((parseIsa_Call(tEatAble,O,[food],Rest),O=iFoodRez2,Rest=[])).
+*/
 
 :- set_prolog_flag(unsafe_speedups,true).
-
-:- gripe_time(3.0,coerce(s,vtDirection,_)).
-:- gripe_time(3.0, \+ coerce(l,vtDirection,_)).
+:- statistics.
+:- time(gripe_time(1.0,coerce(s,vtDirection,_))).
+%:- time(gripe_time(8.0, \+ coerce(l,vtDirection,_))).
+%:- time(gripe_time(1.0, \+ coerce(l,vtDirection,_))).
 
 :- check_clause_counts.
 

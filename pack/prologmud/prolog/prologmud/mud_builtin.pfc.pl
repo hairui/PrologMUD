@@ -221,8 +221,9 @@ predicateConventionMt(agent_call_command,baseKB).
 :- discontiguous(mudTermAnglify/2).
 
 tCol(tCol).
-tCol(tCol).
+tCol(tSet).
 tCol(meta_argtypes).
+% tCol(prologMacroHead).
 tCol(functorDeclares).
 tCol(prologMultiValued).
 tCol(prologSingleValued).
@@ -317,20 +318,20 @@ formatted_resultIsa(ftDiceFn(ftInt,ftInt,ftInt),ftInt).
 
 % isa(Col1, ttObjectType) ==> neg(isa(Col1, ttExpressionType)).
 
-tCol(tCol).
-tCol(tPred).
-tCol(tFunction).
-tCol(tRelation).
-tCol(ttSpatialType).
-tCol(ttExpressionType).
-tCol(functorDeclares).
+tSet(tCol).
+tSet(tPred).
+tSet(tFunction).
+tSet(tRelation).
+tSet(ttSpatialType).
+tSet(ttExpressionType).
+tCol(prologMacroHead).
 % tCol(ArgsIsa):-mpred_is_trigger(ArgsIsa).
 % TODO decide if OK
 %tCol(F):-t(functorDeclares,F).
 tCol(ttExpressionType).
 tSpec(vtActionTemplate).
-tCol(tRegion).
-tCol(tContainer).
+tSet(tRegion).
+tSet(tContainer).
 
 %(mpred_prop(_,meta_argtypes(ArgTypes)),{is_declarations(ArgTypes)}) ==> meta_argtypes(ArgTypes).
 
@@ -359,7 +360,7 @@ prologHybrid(localityOfObject(tObj,tSpatialThing)).
 %((disjointWith(P1,P2) , genls(C1,P1), {dif:dif(C1,P1)}) ==>    disjointWith(C1,P2)).
 % (disjointWith(C1,P2) <- (genls(C1,P1), {dif:dif(C1,P1)}, disjointWith(P1,P2))).
 
-completelyAssertedCollection(Complete)==> ~ttExpressionType(Complete).
+completelyAssertedCollection(Complete)==> {must(\+ ttExpressionType(Complete))}.
 
 tCol(completelyAssertedCollection).
 tCol(completeIsaAsserted).
@@ -958,10 +959,10 @@ tCol(tFunction).
 tCol(tRelation).
 tCol(ttSpatialType).
 tCol(ttExpressionType).
-%  tCol(functorDeclares).
+%  tCol(prologMacroHead).
 % tCol(ArgsIsa):-ttPredType(ArgsIsa).
 % TODO decide if OK
-%tCol(F):-t(functorDeclares,F).
+%tCol(F):-t(prologMacroHead,F).
 tCol(ttExpressionType).
 tSpec(vtActionTemplate).
 

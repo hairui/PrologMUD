@@ -63,7 +63,7 @@
             as_is_term/1,as_is_term/1,
             as_list/2,
             cheaply_u/1,
-            cheaply_u_ilc/1,
+            cheaply_u/1,
             compare_op/4,
             comparitiveOp/1,
             compound_all_open/1,
@@ -167,7 +167,7 @@
    % mpred_expansion
    cheaply_u(+),
    ain_expanded(+),
-   cheaply_u_ilc(+),
+   cheaply_u(+),
    db_expand_maplist(2,*,*,*,*),
    % mpred_expansion
    transitive_lc_nr(2,*,*),
@@ -334,14 +334,14 @@ cheaply_u(G):- quickly(quietly(Goal)).
 
 */
 
-cheaply_u(G):- need_speed,!, (ground(G)->(quietly(baseKB:G),!);quietly(lookup_u(G))).
-cheaply_u(G):- loop_check(cheaply_u_ilc(G),loop_check_term(cheaply_u_ilc(G),ilc2(G),fail)).
+cheaply_u(argsQuoted(G)):- !,lookup_u(argsQuoted(G)).
+cheaply_u(call(ereq,G)):- must(callable(G)),!,cheaply_u(G).
+cheaply_u(G):- quietly(call_u(G)).
+%cheaply_u(G):- need_speed,!, (ground(G)->(quietly(baseKB:G),!);quietly(lookup_u(G))).
+%cheaply_u(G):- loop_check(cheaply_u(G),loop_check_term(cheaply_u(G),ilc2(G),fail)).
+%cheaply_u(G):- predicate_property(G,number_of_rules(N)),N=0,!,lookup_u(G).
+%cheaply_u(G):- strip_module(G,_,C),G\==C,!,cheaply_u(C).
 
-cheaply_u_ilc(argsQuoted(G)):- !,lookup_u(argsQuoted(G)).
-cheaply_u_ilc(call(ereq,G)):- !,cheaply_u_ilc(G).
-cheaply_u_ilc(G):- predicate_property(G,number_of_rules(N)),N=0,!,lookup_u(G).
-cheaply_u_ilc(G):- strip_module(G,_,C),G\==C,!,cheaply_u_ilc(C).
-cheaply_u_ilc(G):- call_u(G).
 
 %= 	 	 
 
@@ -501,6 +501,8 @@ db_expand_maplist(FE,List,T,G,O):-bagof(M, (member(T,List),call(FE,G,M)), ML),li
 %
 must_expand(/*to_exp*/(_)).
 must_expand(props(_,_)).
+must_expand(iprops(_,_)).
+must_expand(upprop(_,_)).
 must_expand(typeProps(_,_)).
 must_expand(G):-functor(G,_,A),!,A==1.
 
@@ -717,6 +719,7 @@ recommify(A,PredArgs,C):- PredArgs=..[P|Args],maplist(recommify,Args,AArgs),B=..
 as_is_term(NC):- cyclic_break(NC), var(NC),!.
 as_is_term(A):-atomic(A),!.
 as_is_term(argsQuoted(Atom)):- !, \+ compound(Atom).
+as_is_term(prologMacroHead(Atom)):- !, \+ compound(Atom).
 as_is_term(functorDeclares(Atom)):- !, \+ compound(Atom).
 as_is_term('$VAR'(_)).
 as_is_term(PARSE):-is_parse_type(PARSE),!,fail.
@@ -1039,6 +1042,10 @@ db_expand_0(_ ,include(CALL),(load_data_file_now(CALL))):- dtrace, !.
 
 db_expand_0(Op,=>(G),(GG)):-!,db_expand_0(Op,(G),(GG)).
 db_expand_0(Op,(G,B),(GGBB)):-!,db_expand_0(Op,G,GG),db_expand_0(Op,B,BB),conjoin_l(GG,BB,GGBB).
+
+db_expand_0(Op,(G==>B),(GG==>BB)):-!,db_expand_0(Op,G,GG),db_expand_0(Op,B,BB).
+
+
 db_expand_0(Op,(G;B),(GG;BB)):-!,db_expand_0(Op,G,GG),db_expand_0(Op,B,BB).
 db_expand_0(Op,(G:-B),(GG:-BB)):-!,db_expand_0(Op,G,GG),fully_expand_goal(Op,B,BB).
 % db_expand_0(_,Term,CL):- bagof(O,do_expand_args(isEach,Term,O),L),L\=@=[Term],!,list_to_conjuncts(L,CL).

@@ -504,6 +504,7 @@ convention_to_symbolic_mt(_Why,genlMt,2,baseKB):-!.
 convention_to_symbolic_mt(_Why,mtCycL,1,baseKB):-!.
 convention_to_symbolic_mt(_Why,mtProlog,1,baseKB):-!.
 convention_to_symbolic_mt(_Why,functorDeclares,1,baseKB):-!.
+convention_to_symbolic_mt(_Why,prologMacroHead,1,baseKB):-!.
 convention_to_symbolic_mt(_Why,F,A,abox):- mpred_database_term(F,A,_).
 convention_to_symbolic_mt(_Why,F,_,Mt):-  call_u(predicateConventionMt(F,Mt)),!.
 convention_to_symbolic_mt(_Why,F,A,abox):- baseKB:wrap_shared(F,A,ereq).
@@ -890,6 +891,8 @@ mpred_post1(P,S):- gripe_time(0.6,mpred_post12(P,S)).
 :- module_transparent(mpred_post1/2).
 :- module_transparent(mpred_post12/2).
 :- export(mpred_post12/2).
+
+mpred_post12(P, S):- compound(P), ( \+ P = argsQuoted(_) ), functor(P,F,N), ( F \==  action_rules, F \== (==>) ), (arg(N,P,A);arg(1,P,A)), member(A,['$VAR'('????????????'),'$VAR'(_)])->trace_or_throw(mpred_post1(P, S)).
 
 mpred_post12( \+ P,   S):- nonvar(P), !, must(mpred_post1_rem(P,S)).
 
@@ -1828,6 +1831,7 @@ lookup_m_g(To,_M,G):- clause(To:G,true).
 call_u(G):- var(G),!,dtrace,defaultAssertMt(W),with_umt(W,mpred_fact_mp(W,G)).
 call_u(M:G):- var(M),!,trace_or_throw(var_call_u(M:G)).
 call_u(M:G):- nonvar(M),var(G),!,sanity(mtCycL(M)),with_umt(M,mpred_fact_mp(M,G)).
+call_u(G):- current_prolog_flag(unsafe_speedups,true),!,baseKB:call(G).
 call_u(M:G):- clause_b(mtProlog(M)),predicate_property(M:G,defined),!,call(M:G).
 call_u(G):- strip_module(G,M,P),
   (clause_b(mtCycL(M))-> W=M;defaultAssertMt(W)),!,
@@ -1872,6 +1876,7 @@ mpred_BC_CACHE0(_,P):-
 % I''d like to remove this soon
 mpred_call_no_bc(P0):- strip_module(P0,_,P), sanity(stack_check),var(P),!, mpred_fact(P).
 mpred_call_no_bc(baseKB:true):-!.
+
 mpred_call_no_bc(P):- no_repeats(loop_check(mpred_call_no_bc0(P),mpred_METACALL(call, P))).
 
 % mpred_call_no_bc0(P):- lookup_u(P).
@@ -1882,12 +1887,14 @@ mpred_call_no_bc(P):- no_repeats(loop_check(mpred_call_no_bc0(P),mpred_METACALL(
 % TODO .. mpred_call_no_bc0(P):-  defaultAssertMt(Mt), clause_b(genlMt(Mt,SuperMt)), call_umt(SuperMt,P).
 %mpred_call_no_bc0(P):- mpred_call_with_no_triggers(P).
 % mpred_call_no_bc0(P):- nonvar(P),predicate_property(P,defined),!, P.
+mpred_call_no_bc0(P):- current_prolog_flag(unsafe_speedups,true),!,baseKB:call(P).
 mpred_call_no_bc0(P):- loop_check(mpred_METACALL(ereq, P)).
 
 pred_check(A):- var(A),!.
 % catch module prefix issues
 pred_check(A):- nonvar(A),must(atom(A)).
 
+mpred_METACALL(How,P):- current_prolog_flag(unsafe_speedups,true),!,baseKB:call(How,P).
 mpred_METACALL(How,P):- mpred_METACALL(How, Cut, P), (var(Cut)->true;(Cut=cut(CutCall)->(!,CutCall);mpred_call_no_bc(Cut))).
 
 mpred_METACALL(How, Cut, Var):- var(Var),!,trace_or_throw(var_mpred_METACALL_MI(How,Cut,Var)).
@@ -2374,7 +2381,7 @@ build_code_test(_,Test,Test).
 %
 build_consequent(_      ,Test,Test):- is_ftVar(Test),!.
 build_consequent(_      ,Test,TestO):-is_ftVar(Test),!,TestO=added(Test).
-build_consequent(_Sup,!,cut_c):-!.
+build_consequent(_Sup,!,{cut_c}):-!.
 build_consequent(WS,'{}'(Test),'{}'(TestO)) :- !,build_code_test(WS,Test,TestO).
 build_consequent(WS,rhs(Test),rhs(TestO)) :- !,build_consequent(WS,Test,TestO).
 build_consequent(WS,Test,TestO):- is_list(Test),must_maplist(build_consequent(WS),Test,TestO).
